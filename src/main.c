@@ -24,8 +24,12 @@ int main() {
 	sprite2->local_pos = (scaffold_vector2){16, 0};
 	scaffold_node_add_child(root, sprite2);
 
+	scaffold_node* rect = mason_rectangle_create(drawer, (scaffold_vector2){16, 16});
+	rect->local_pos = (scaffold_vector2){32, 0};
+	scaffold_node_add_child(root, rect);
+
 	while (!end) {
-		scaffold_process_cleanup(root, mason_drawer_frame_time());
+		scaffold_process_cleanup(root, mason_drawer_get_frame_time());
 	}
 
 	scaffold_queue_destroy(root);
