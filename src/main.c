@@ -3,8 +3,8 @@
 #include "scaffold.h"
 #include "mason.h"
 
-#define DEFAULT_W 128
-#define DEFAULT_H 128
+#define WIN_W 800
+#define WIN_H 600
 #define TITLE "boop :3"
 #define FPS 0 // unlimited
 
@@ -22,7 +22,7 @@ int main() {
 
 	scaffold_node* root = scaffold_initialize();
 
-	scaffold_node* drawer = mason_drawer_create(128, 128, "boop :3", 60);
+	scaffold_node* drawer = mason_drawer_create(WIN_W, WIN_H, TITLE, FPS);
 	scaffold_node_add_child(root, drawer);
 
 	scaffold_node* sprite = mason_sprite_create(drawer, "assets/orange-kitten.png");
