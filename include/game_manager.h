@@ -13,6 +13,8 @@ extern int game_manager_type;
 typedef struct {
 	scaffold_node* drawer;
 	int curr_player;
+
+	scaffold_node* cells[VCELLS][HCELLS];
 } game_manager_data;
 
 scaffold_node* game_manager_create(scaffold_node* drawer);
