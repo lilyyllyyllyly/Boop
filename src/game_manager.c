@@ -15,16 +15,26 @@ static int is_cell_valid(int x, int y) {
 }
 
 static void push_away(game_manager_data* data, int pushed_x, int pushed_y, int pusher_x, int pusher_y) {
-	if (!is_cell_valid(pushed_x, pushed_y) || !data->cells[pushed_y][pushed_x]) return;
-	if (!is_cell_valid(pusher_x, pusher_y)) return;
+	if (!is_cell_valid(pushed_x, pushed_y) || !data->cells[pushed_y][pushed_x]) return; // abort if cell is invalid
 
+	// calculate boop direction
 	int new_x = 2*pushed_x - pusher_x;
 	int new_y = 2*pushed_y - pusher_y;
-	if (!is_cell_valid(new_x, new_y) || data->cells[new_y][new_x]) return;
 
+	// delete cat if its outside the board (they fall off the bed according to the rules)
+	if (!is_cell_valid(new_x, new_y)) {
+		scaffold_queue_destroy(data->cells[pushed_y][pushed_x]);
+		data->cells[pushed_y][pushed_x] = NULL;
+		return;
+	}
+
+	if (data->cells[new_y][new_x]) return; // abort if there's already a cat there
+
+	// change cat cell to new position
 	data->cells[new_y][new_x] = data->cells[pushed_y][pushed_x];
 	data->cells[pushed_y][pushed_x] = NULL;
 
+	// update real node position
 	((scaffold_node*)(data->cells[new_y][new_x]))->local_pos = (scaffold_vector2){new_x * CELL_W, new_y * CELL_H};
 }
 
