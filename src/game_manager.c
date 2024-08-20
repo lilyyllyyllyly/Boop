@@ -8,32 +8,27 @@ int game_manager_type = NODE_TYPE_UNASSIGNED;
 #include "game_manager.h"
 #include "cat.h"
 
-static int is_cell_valid(int x, int y) {
+void game_manager_set_cell(scaffold_node* game_manager, int x, int y, scaffold_node* value) {
+	((game_manager_data*)(game_manager->data))->cells[y][x] = value;
+}
+
+scaffold_node* game_manager_get_cell(scaffold_node* game_manager, int x, int y) {
+	return ((game_manager_data*)(game_manager->data))->cells[y][x];
+}
+
+int is_cell_valid(int x, int y) {
 	return x >= 0 && x < HCELLS && y >= 0 && y < VCELLS;
 }
 
-static void push_away(game_manager_data* data, int pushed_x, int pushed_y, int pusher_x, int pusher_y) {
-	if (!is_cell_valid(pushed_x, pushed_y) || !data->cells[pushed_y][pushed_x]) return; // abort if cell is invalid
+static void push_away(game_manager_data* data, scaffold_node* pusher, int pushed_x, int pushed_y) {
+	cat_data* pusher_data = (cat_data*)(pusher->data);
 
 	// calculate boop direction
-	int new_x = 2*pushed_x - pusher_x;
-	int new_y = 2*pushed_y - pusher_y;
+	int new_x = 2*pushed_x - pusher_data->x;
+	int new_y = 2*pushed_y - pusher_data->y;
 
-	// delete cat if its outside the board (they fall off the bed according to the rules)
-	if (!is_cell_valid(new_x, new_y)) {
-		scaffold_queue_destroy(data->cells[pushed_y][pushed_x]);
-		data->cells[pushed_y][pushed_x] = NULL;
-		return;
-	}
-
-	if (data->cells[new_y][new_x]) return; // abort if there's already a cat there
-
-	// change cat cell to new position
-	data->cells[new_y][new_x] = data->cells[pushed_y][pushed_x];
-	data->cells[pushed_y][pushed_x] = NULL;
-
-	// update real node position
-	((scaffold_node*)(data->cells[new_y][new_x]))->local_pos = (scaffold_vector2){new_x * CELL_W, new_y * CELL_H};
+	// move cat to new position
+	cat_move(data->cells[pushed_y][pushed_x], new_x, new_y);
 }
 
 static void process(scaffold_node* game_manager, double delta) {
@@ -51,15 +46,16 @@ static void process(scaffold_node* game_manager, double delta) {
 	if (!is_cell_valid(xid, yid) || data->cells[yid][xid]) return; // abort if theres already a cat in the position (or its invalid)
 
 	// spawn cat
-	scaffold_node* cat = cat_create(data->drawer, data->curr_player, xid, yid);
+	scaffold_node* cat = cat_create(data->drawer, game_manager, data->curr_player, xid, yid);
 	scaffold_node_add_child(game_manager, cat);
 	data->cells[yid][xid] = cat;
 
 	// push cats around it
 	for (int pushed_y = yid-1; pushed_y <= yid+1; ++pushed_y) {
 		for (int pushed_x = xid-1; pushed_x <= xid+1; ++pushed_x) {
+			if (!is_cell_valid(pushed_x, pushed_y) || !data->cells[pushed_y][pushed_x]) continue;
 			if (pushed_x == xid && pushed_y == yid) continue;
-			push_away(data, pushed_x, pushed_y, xid, yid);
+			push_away(data, cat, pushed_x, pushed_y);
 		}
 	}
 
