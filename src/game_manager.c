@@ -6,9 +6,7 @@
 int game_manager_type = NODE_TYPE_UNASSIGNED;
 
 #include "game_manager.h"
-
-#define P0_KITTEN_SPR "assets/orange-kitten.png"
-#define P1_KITTEN_SPR "assets/black-kitten.png"
+#include "cat.h"
 
 static int is_cell_valid(int x, int y) {
 	return x >= 0 && x < HCELLS && y >= 0 && y < VCELLS;
@@ -53,8 +51,7 @@ static void process(scaffold_node* game_manager, double delta) {
 	if (!is_cell_valid(xid, yid) || data->cells[yid][xid]) return; // abort if theres already a cat in the position (or its invalid)
 
 	// spawn cat
-	scaffold_node* cat = mason_sprite_create(data->drawer, data->curr_player == 0? P0_KITTEN_SPR : P1_KITTEN_SPR);
-	cat->local_pos = (scaffold_vector2){xid * CELL_W, yid * CELL_H};
+	scaffold_node* cat = cat_create(data->drawer, data->curr_player, xid, yid);
 	scaffold_node_add_child(game_manager, cat);
 	data->cells[yid][xid] = cat;
 
