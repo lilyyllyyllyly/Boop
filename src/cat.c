@@ -21,7 +21,7 @@ void cat_move(scaffold_node* cat, int new_x, int new_y) {
 
 	// delete cat if it falls outside the board (they fall off the bed according to the rules)
 	if (!is_cell_valid(new_x, new_y)) {
-		scaffold_queue_destroy(cat);
+		cat->destroy(cat);
 		return;
 	}
 
