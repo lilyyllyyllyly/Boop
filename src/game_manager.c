@@ -31,6 +31,18 @@ static void push_away(game_manager_data* data, scaffold_node* pusher, int pushed
 	cat_move(data->cells[pushed_y][pushed_x], new_x, new_y);
 }
 
+int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector2 other1_pos, scaffold_vector2 other2_pos) {
+	if (!is_cell_valid(other1_pos.x, other1_pos.y) || !is_cell_valid(other2_pos.x, other2_pos.y)) return 0;
+	if (!data->cells[(int)other1_pos.y][(int)other1_pos.x] || !data->cells[(int)other2_pos.y][(int)other2_pos.x]) return 0;
+
+	// promote (for now just destroying)
+	scaffold_queue_destroy(cat);
+	scaffold_queue_destroy(data->cells[(int)other1_pos.y][(int)other1_pos.x]);
+	scaffold_queue_destroy(data->cells[(int)other2_pos.y][(int)other2_pos.x]);
+
+	return 1;
+}
+
 static void process(scaffold_node* game_manager, double delta) {
 	if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return;
 
@@ -56,6 +68,37 @@ static void process(scaffold_node* game_manager, double delta) {
 			if (!is_cell_valid(pushed_x, pushed_y) || !data->cells[pushed_y][pushed_x]) continue;
 			if (pushed_x == xid && pushed_y == yid) continue;
 			push_away(data, cat, pushed_x, pushed_y);
+		}
+	}
+
+	// check for promotion
+	for (scaffold_node* cat = game_manager->first_child; cat != NULL; cat = cat->next_sibling) {
+		cat_data* cat_data_ = (cat_data*)(cat->data);
+		int cat_x = cat_data_->x;
+		int cat_y = cat_data_->y;
+
+		{// horizontal
+			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x-1, cat_y};
+			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x+1, cat_y};
+			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
+		}
+
+		{// vertical
+			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x, cat_y-1};
+			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x, cat_y+1};
+			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
+		}
+
+		{// diagonal (top-left to bottom-right)
+			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x-1, cat_y-1};
+			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x+1, cat_y+1};
+			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
+		}
+
+		{// diagonal (bottom-left to top-right)
+			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x-1, cat_y+1};
+			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x+1, cat_y-1};
+			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
 		}
 	}
 

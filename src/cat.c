@@ -9,7 +9,10 @@ int cat_type = NODE_TYPE_UNASSIGNED;
 #include "game_manager.h"
 
 static void destroy(scaffold_node* cat) {
-	free(cat->data);
+	cat_data* data = (cat_data*)(cat->data);
+
+	game_manager_set_cell(data->game_manager, data->x, data->y, NULL);
+	free(data);
 	scaffold_node_destroy(cat);
 }
 
@@ -19,7 +22,6 @@ void cat_move(scaffold_node* cat, int new_x, int new_y) {
 	// delete cat if it falls outside the board (they fall off the bed according to the rules)
 	if (!is_cell_valid(new_x, new_y)) {
 		scaffold_queue_destroy(cat);
-		game_manager_set_cell(data->game_manager, data->x, data->y, NULL);
 		return;
 	}
 
