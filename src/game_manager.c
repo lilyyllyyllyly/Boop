@@ -32,13 +32,23 @@ static void push_away(game_manager_data* data, scaffold_node* pusher, int pushed
 }
 
 int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector2 other1_pos, scaffold_vector2 other2_pos) {
-	if (!is_cell_valid(other1_pos.x, other1_pos.y) || !is_cell_valid(other2_pos.x, other2_pos.y)) return 0;
-	if (!data->cells[(int)other1_pos.y][(int)other1_pos.x] || !data->cells[(int)other2_pos.y][(int)other2_pos.x]) return 0;
+	if (!is_cell_valid(other1_pos.x, other1_pos.y) || !is_cell_valid(other2_pos.x, other2_pos.y)) return 0; // abort if either position is invalid
+
+	scaffold_node* other1 = data->cells[(int)other1_pos.y][(int)other1_pos.x];
+	scaffold_node* other2 = data->cells[(int)other2_pos.y][(int)other2_pos.x];
+
+	if (other1 == NULL || other2 == NULL) return 0; // if either position doesnt have a cat, promotion wont happen
+
+	cat_data* cat1_data   = (cat_data*)(cat->data);
+	cat_data* other1_data = (cat_data*)(other1->data);
+	cat_data* other2_data = (cat_data*)(other2->data);
+
+	if (other1_data->player_id != cat1_data->player_id || other2_data->player_id != cat1_data->player_id) return 0; // if any cat is from a different player, promotion wont happen
 
 	// promote (for now just destroying)
 	scaffold_queue_destroy(cat);
-	scaffold_queue_destroy(data->cells[(int)other1_pos.y][(int)other1_pos.x]);
-	scaffold_queue_destroy(data->cells[(int)other2_pos.y][(int)other2_pos.x]);
+	scaffold_queue_destroy(other1);
+	scaffold_queue_destroy(other2);
 
 	return 1;
 }
