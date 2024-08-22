@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "scaffold.h"
 #include "mason.h"
@@ -7,6 +8,7 @@ int game_manager_type = NODE_TYPE_UNASSIGNED;
 
 #include "game_manager.h"
 #include "cat.h"
+#include "player.h"
 
 void game_manager_set_cell(scaffold_node* game_manager, int x, int y, scaffold_node* value) {
 	((game_manager_data*)(game_manager->data))->cells[y][x] = value;
@@ -43,7 +45,7 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 	cat_data* other1_data = (cat_data*)(other1->data);
 	cat_data* other2_data = (cat_data*)(other2->data);
 
-	if (other1_data->player_id != cat1_data->player_id || other2_data->player_id != cat1_data->player_id) return 0; // if any cat is from a different player, promotion wont happen
+	if (other1_data->player->id != cat1_data->player->id || other2_data->player->id != cat1_data->player->id) return 0; // if any cat is from a different player, promotion wont happen
 
 	// promote (for now just destroying)
 	scaffold_queue_destroy(cat);
@@ -113,13 +115,19 @@ static void process(scaffold_node* game_manager, double delta) {
 	}
 
 	// other player's turn
-	data->curr_player = !data->curr_player;
+	data->curr_player = data->curr_player == data->player0? data->player1 : data->player0;
+
+	printf("player 0: %d kittens\n", data->player0->kitten_count);
+	printf("player 1: %d kittens\n", data->player1->kitten_count);
 }
 
-scaffold_node* game_manager_create(scaffold_node* drawer) {
+scaffold_node* game_manager_create(scaffold_node* drawer, player_data* player0, player_data* player1) {
 	game_manager_data* data = calloc(1, sizeof(game_manager_data));
 	data->drawer = drawer;
-	data->curr_player = 0;
+
+	data->curr_player = player0;
+	data->player0 = player0;
+	data->player1 = player1;
 
 	return scaffold_node_create(
 		&game_manager_type,

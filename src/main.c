@@ -4,6 +4,7 @@
 #include "mason.h"
 
 #include "game_manager.h"
+#include "player.h"
 
 #define WIN_W 800
 #define WIN_H 600
@@ -26,7 +27,12 @@ int main() {
 
 	mason_drawer_set_window_size(WIN_W, WIN_H);
 
-	scaffold_node* game_manager = game_manager_create(drawer);
+	scaffold_node* player0 = player_create(0);
+	scaffold_node_add_child(root, player0);
+	scaffold_node* player1 = player_create(1);
+	scaffold_node_add_child(root, player1);
+
+	scaffold_node* game_manager = game_manager_create(drawer, player0->data, player1->data);
 	scaffold_node_add_child(root, game_manager);
 
 	while (!end) {

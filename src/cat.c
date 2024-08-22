@@ -7,9 +7,12 @@ int cat_type = NODE_TYPE_UNASSIGNED;
 
 #include "cat.h"
 #include "game_manager.h"
+#include "player.h"
 
 static void destroy(scaffold_node* cat) {
 	cat_data* data = (cat_data*)(cat->data);
+
+	++data->player->kitten_count; // add kitten back to player's hand
 
 	game_manager_set_cell(data->game_manager, data->x, data->y, NULL);
 	free(data);
@@ -39,12 +42,15 @@ void cat_move(scaffold_node* cat, int new_x, int new_y) {
 	cat->local_pos = (scaffold_vector2){new_x * CELL_W, new_y * CELL_H};
 }
 
-scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, int player_id, int x, int y) {
+scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, player_data* player, int x, int y) {
 	cat_data* data = malloc(sizeof(cat_data));
 	data->game_manager = game_manager;
-	data->player_id = player_id;
 	data->x = x;
 	data->y = y;
+
+	data->player = player;
+
+	--player->kitten_count; // remove kitten from player's hand
 
 	scaffold_node* cat = scaffold_node_create(
 		&cat_type,
@@ -56,7 +62,7 @@ scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, in
 	cat->local_pos = (scaffold_vector2){x * CELL_W, y * CELL_H};
 	game_manager_set_cell(data->game_manager, x, y, cat);
 
-	scaffold_node* sprite = mason_sprite_create(drawer, player_id == 0? P0_KITTEN_SPR : P1_KITTEN_SPR);
+	scaffold_node* sprite = mason_sprite_create(drawer, player->id == 0? P0_KITTEN_SPR : P1_KITTEN_SPR);
 	scaffold_node_add_child(cat, sprite);
 
 	return cat;
