@@ -19,9 +19,10 @@ typedef struct {
 	player_data* player;
 
 	int promote;
+	int level;
 } cat_data;
 
 void cat_move(scaffold_node* cat, int new_x, int new_y);
 
-scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, player_data* player, int x, int y, int promotion);
+scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, player_data* player, int x, int y, int level);
 

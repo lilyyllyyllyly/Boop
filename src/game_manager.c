@@ -25,12 +25,18 @@ int is_cell_valid(int x, int y) {
 static void push_away(game_manager_data* data, scaffold_node* pusher, int pushed_x, int pushed_y) {
 	cat_data* pusher_data = (cat_data*)(pusher->data);
 
+	scaffold_node* pushed = data->cells[pushed_y][pushed_x];
+	cat_data* pushed_data = (cat_data*)(pushed->data);
+
+	// only big cats can boop other big cats
+	if (pusher_data->level < pushed_data->level) return;
+
 	// calculate boop direction
 	int new_x = 2*pushed_x - pusher_data->x;
 	int new_y = 2*pushed_y - pusher_data->y;
 
 	// move cat to new position
-	cat_move(data->cells[pushed_y][pushed_x], new_x, new_y);
+	cat_move(pushed, new_x, new_y);
 }
 
 int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector2 other1_pos, scaffold_vector2 other2_pos) {
