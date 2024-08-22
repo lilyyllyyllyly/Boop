@@ -12,7 +12,11 @@ int cat_type = NODE_TYPE_UNASSIGNED;
 static void destroy(scaffold_node* cat) {
 	cat_data* data = (cat_data*)(cat->data);
 
-	++data->player->kitten_count; // add kitten back to player's hand
+	if (data->promote) {
+		++data->player->cat_count; // add promoted cat to player's hand
+	} else {
+		++data->player->kitten_count; // add kitten back to player's hand
+	}
 
 	game_manager_set_cell(data->game_manager, data->x, data->y, NULL);
 	free(data);
@@ -42,15 +46,21 @@ void cat_move(scaffold_node* cat, int new_x, int new_y) {
 	cat->local_pos = (scaffold_vector2){new_x * CELL_W, new_y * CELL_H};
 }
 
-scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, player_data* player, int x, int y) {
+scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, player_data* player, int x, int y, int promotion) {
 	cat_data* data = malloc(sizeof(cat_data));
 	data->game_manager = game_manager;
 	data->x = x;
 	data->y = y;
 
 	data->player = player;
+	
+	data->promote = 0;
 
-	--player->kitten_count; // remove kitten from player's hand
+	if (promotion) {
+		--player->cat_count; // remove cat from player's hand
+	} else {
+		--player->kitten_count; // remove kitten from player's hand
+	}
 
 	scaffold_node* cat = scaffold_node_create(
 		&cat_type,
@@ -62,8 +72,13 @@ scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, pl
 	cat->local_pos = (scaffold_vector2){x * CELL_W, y * CELL_H};
 	game_manager_set_cell(data->game_manager, x, y, cat);
 
-	scaffold_node* sprite = mason_sprite_create(drawer, player->id == 0? P0_KITTEN_SPR : P1_KITTEN_SPR);
-	scaffold_node_add_child(cat, sprite);
+	if (promotion) {
+		scaffold_node* sprite = mason_sprite_create(drawer, player->id == 0? P0_CAT_SPR : P1_CAT_SPR);
+		scaffold_node_add_child(cat, sprite);
+	} else {
+		scaffold_node* sprite = mason_sprite_create(drawer, player->id == 0? P0_KITTEN_SPR : P1_KITTEN_SPR);
+		scaffold_node_add_child(cat, sprite);
+	}
 
 	return cat;
 }

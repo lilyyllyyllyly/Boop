@@ -47,7 +47,10 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 
 	if (other1_data->player->id != cat1_data->player->id || other2_data->player->id != cat1_data->player->id) return 0; // if any cat is from a different player, promotion wont happen
 
-	// promote (for now just destroying)
+	// promote
+	cat1_data->promote = 1;
+	other1_data->promote = 1;
+	other2_data->promote = 1;
 	scaffold_queue_destroy(cat);
 	scaffold_queue_destroy(other1);
 	scaffold_queue_destroy(other2);
@@ -56,11 +59,12 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 }
 
 static void process(scaffold_node* game_manager, double delta) {
-	if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return;
+	game_manager_data* data = (game_manager_data*)(game_manager->data);
+
+	int promote = 0;
+	if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !(promote = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && data->curr_player->cat_count)) return;
 
 	// on click
-
-	game_manager_data* data = (game_manager_data*)(game_manager->data);
 
 	// get mouse position
 	scaffold_vector2 mouse_pos = mason_drawer_screen_to_game_pos(data->drawer, (scaffold_vector2){GetMouseX(), GetMouseY()});
@@ -70,7 +74,7 @@ static void process(scaffold_node* game_manager, double delta) {
 	if (!is_cell_valid(xid, yid) || data->cells[yid][xid]) return; // abort if theres already a cat in the position (or its invalid)
 
 	// spawn cat
-	scaffold_node* cat = cat_create(data->drawer, game_manager, data->curr_player, xid, yid);
+	scaffold_node* cat = cat_create(data->drawer, game_manager, data->curr_player, xid, yid, promote);
 	scaffold_node_add_child(game_manager, cat);
 	data->cells[yid][xid] = cat;
 
@@ -117,8 +121,8 @@ static void process(scaffold_node* game_manager, double delta) {
 	// other player's turn
 	data->curr_player = data->curr_player == data->player0? data->player1 : data->player0;
 
-	printf("player 0: %d kittens\n", data->player0->kitten_count);
-	printf("player 1: %d kittens\n", data->player1->kitten_count);
+	printf("player 0: %d kittens, %d cats\n", data->player0->kitten_count, data->player0->cat_count);
+	printf("player 1: %d kittens, %d cats\n", data->player1->kitten_count, data->player1->cat_count);
 }
 
 scaffold_node* game_manager_create(scaffold_node* drawer, player_data* player0, player_data* player1) {
