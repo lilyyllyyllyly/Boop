@@ -51,7 +51,12 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 	cat_data* other1_data = (cat_data*)(other1->data);
 	cat_data* other2_data = (cat_data*)(other2->data);
 
-	if (other1_data->player->id != cat1_data->player->id || other2_data->player->id != cat1_data->player->id) return 0; // if any cat is from a different player, promotion wont happen
+	if (other1_data->player->id != cat1_data->player->id || other2_data->player->id != cat1_data->player->id) return 0; // if any kitten is from a different player, promotion wont happen
+
+	if (other1_data->level > 0 || other2_data->level > 0 || cat1_data->level > 0) {
+		// TODO: win if theyre all cats
+		return 0; // if any of them is a cat not a kitten, promotion wont happen
+	}
 
 	// promote
 	cat1_data->promote = 1;
