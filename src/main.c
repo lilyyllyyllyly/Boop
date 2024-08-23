@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <signal.h>
 
 #include "scaffold.h"
@@ -35,8 +36,16 @@ int main() {
 	scaffold_node* game_manager = game_manager_create(drawer, player0->data, player1->data);
 	scaffold_node_add_child(root, game_manager);
 
-	while (!end) {
+	game_manager_data* gm_data = (game_manager_data*)(game_manager->data);
+
+	while (!gm_data->ended) {
 		scaffold_process_cleanup(root, mason_drawer_get_frame_time());
+	}
+
+	if (gm_data->curr_player == gm_data->player0) {
+		printf("Player 1 Wins!\n");
+	} else {
+		printf("Player 2 Wins!\n");
 	}
 
 	scaffold_queue_destroy(root);

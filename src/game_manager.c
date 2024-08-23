@@ -53,9 +53,11 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 
 	if (other1_data->player->id != cat1_data->player->id || other2_data->player->id != cat1_data->player->id) return 0; // if any kitten is from a different player, promotion wont happen
 
-	if (other1_data->level > 0 || other2_data->level > 0 || cat1_data->level > 0) {
-		// TODO: win if theyre all cats
-		return 0; // if any of them is a cat not a kitten, promotion wont happen
+	if (other1_data->level > 0 && other2_data->level > 0 && cat1_data->level > 0) {
+		data->ended = 1; // if all are cats, game ended
+		return 1; // count as promotion to not check other possibilities
+	} else if (other1_data->level > 0 || other2_data->level > 0 || cat1_data->level > 0) {
+		return 0; // otherwise, if any of them is a cat not a kitten, promotion wont happen
 	}
 
 	// promote
@@ -107,26 +109,29 @@ static void process(scaffold_node* game_manager, double delta) {
 		{// horizontal
 			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x-1, cat_y};
 			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x+1, cat_y};
-			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
+			if (check_promotion(data, cat, other1_pos, other2_pos)) goto check_end;
 		}
 
 		{// vertical
 			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x, cat_y-1};
 			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x, cat_y+1};
-			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
+			if (check_promotion(data, cat, other1_pos, other2_pos)) goto check_end;
 		}
 
 		{// diagonal (top-left to bottom-right)
 			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x-1, cat_y-1};
 			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x+1, cat_y+1};
-			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
+			if (check_promotion(data, cat, other1_pos, other2_pos)) goto check_end;
 		}
 
 		{// diagonal (bottom-left to top-right)
 			scaffold_vector2 other1_pos = (scaffold_vector2){cat_x-1, cat_y+1};
 			scaffold_vector2 other2_pos = (scaffold_vector2){cat_x+1, cat_y-1};
-			if (check_promotion(data, cat, other1_pos, other2_pos)) continue;
+			if (check_promotion(data, cat, other1_pos, other2_pos)) goto check_end;
 		}
+
+check_end:
+		if (data->ended) return;
 	}
 
 	// other player's turn
@@ -143,6 +148,8 @@ scaffold_node* game_manager_create(scaffold_node* drawer, player_data* player0, 
 	data->curr_player = player0;
 	data->player0 = player0;
 	data->player1 = player1;
+
+	data->ended = 0;
 
 	return scaffold_node_create(
 		&game_manager_type,

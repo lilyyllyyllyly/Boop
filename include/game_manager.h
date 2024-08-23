@@ -20,6 +20,8 @@ typedef struct {
 	player_data* player1;
 
 	scaffold_node* cells[VCELLS][HCELLS];
+
+	int ended;
 } game_manager_data;
 
 void game_manager_set_cell(scaffold_node* game_manager, int x, int y, scaffold_node* value);
