@@ -84,6 +84,28 @@ static void process(scaffold_node* game_manager, double delta) {
 	int xid = mouse_pos.x / CELL_W;
 	int yid = mouse_pos.y / CELL_H;
 
+	if (data->curr_player->kitten_count <= 0 && data->curr_player->cat_count <= 0) { // player has no cats or kittens, promote one placed kitten
+		if (!is_cell_valid(xid, yid) || !data->cells[yid][xid]) return; // abort if theres no cat in the position (or its invalid)
+
+		scaffold_node* cat = data->cells[yid][xid];
+		cat_data* cat_data_ = (cat_data*)(cat->data);
+
+		if (cat_data_->player != data->curr_player) return; // abort if the player chose the opponent's cat
+
+		if (cat_data_->level > 0) { // if the player clicked a cat, simply remove it from the board
+			scaffold_queue_destroy(cat);
+			goto next_turn;
+		}
+
+		// if the player clicked a kitten, promote it
+		cat_data_->promote = 1;
+		scaffold_queue_destroy(cat);
+
+		goto next_turn;
+	} else if (data->curr_player->kitten_count <= 0 && !promote) { // abort if player tried to place a kitten with no kittens left, but still has cats left
+		return;
+	}
+
 	if (!is_cell_valid(xid, yid) || data->cells[yid][xid]) return; // abort if theres already a cat in the position (or its invalid)
 
 	// spawn cat
@@ -134,6 +156,7 @@ check_end:
 		if (data->ended) return;
 	}
 
+next_turn:
 	// other player's turn
 	data->curr_player = data->curr_player == data->player0? data->player1 : data->player0;
 
