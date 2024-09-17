@@ -20,6 +20,8 @@ typedef struct {
 
 	int promote;
 	int level;
+
+	int promotion_lines;
 } cat_data;
 
 void cat_move(scaffold_node* cat, int new_x, int new_y);

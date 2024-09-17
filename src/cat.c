@@ -57,6 +57,8 @@ scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, pl
 	data->promote = 0;
 	data->level = level;
 
+	data->promotion_lines = 0;
+
 	if (level) {
 		--player->cat_count; // remove cat from player's hand
 	} else {

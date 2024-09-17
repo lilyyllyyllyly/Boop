@@ -3,6 +3,7 @@
 #include "scaffold.h"
 
 #include "player.h"
+#include "cat.h"
 
 #define HCELLS 6
 #define VCELLS 6
@@ -10,7 +11,14 @@
 #define CELL_W 24
 #define CELL_H 24
 
+#define PLINE_CAT_COUNT 3
+
 extern int game_manager_type;
+
+typedef struct {
+	scaffold_node* cats[PLINE_CAT_COUNT];
+	cat_data* datas[PLINE_CAT_COUNT];
+} promotion_line;
 
 typedef struct {
 	scaffold_node* drawer;
@@ -22,6 +30,11 @@ typedef struct {
 	scaffold_node* cells[VCELLS][HCELLS];
 
 	int ended;
+	int choosing_turn;
+
+	scaffold_list* promotion_lines;
+	promotion_line chosen_line;
+	int curr_choose_id;
 } game_manager_data;
 
 void game_manager_set_cell(scaffold_node* game_manager, int x, int y, scaffold_node* value);
