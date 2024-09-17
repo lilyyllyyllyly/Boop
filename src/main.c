@@ -12,10 +12,10 @@
 #define TITLE "boop :3"
 #define FPS 0 // unlimited
 
-int end = 0;
+int interrupt = 0;
 
 void handle_interrupt(int signal) {
-	end = 1;
+	interrupt = 1;
 }
 
 int main() {
@@ -38,16 +38,22 @@ int main() {
 
 	game_manager_data* gm_data = (game_manager_data*)(game_manager->data);
 
-	while (!gm_data->ended) {
+	while (!gm_data->ended && !interrupt) {
 		scaffold_process_cleanup(root, mason_drawer_get_frame_time());
 	}
 
-	if (gm_data->curr_player == gm_data->player0) {
-		printf("Player 1 Wins!\n");
-	} else {
-		printf("Player 2 Wins!\n");
+	if (interrupt) {
+		puts("Interrupted by SIGINT.\n");
+		goto end;
 	}
 
+	if (gm_data->curr_player == gm_data->player0) {
+		puts("Player 1 Wins!\n");
+	} else {
+		puts("Player 2 Wins!\n");
+	}
+
+end:
 	scaffold_queue_destroy(root);
 }
 
