@@ -12,6 +12,8 @@
 #define TITLE "boop :3"
 #define FPS 0 // unlimited
 
+#define BACKGROUND_SPRITE "assets/bg.png"
+
 int interrupt = 0;
 
 void handle_interrupt(int signal) {
@@ -37,6 +39,9 @@ int main() {
 	scaffold_node_add_child(root, game_manager);
 
 	game_manager_data* gm_data = (game_manager_data*)(game_manager->data);
+
+	scaffold_node* bg = mason_texture_create(drawer, 0, BACKGROUND_SPRITE);
+	scaffold_node_add_child(root, bg);
 
 	while (!gm_data->ended && !interrupt) {
 		scaffold_process_cleanup(root, mason_drawer_get_frame_time());

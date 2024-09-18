@@ -76,10 +76,10 @@ scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, pl
 	game_manager_set_cell(data->game_manager, x, y, cat);
 
 	if (level) {
-		scaffold_node* sprite = mason_sprite_create(drawer, player->id == 0? P0_CAT_SPR : P1_CAT_SPR);
+		scaffold_node* sprite = mason_texture_create(drawer, CAT_DRAW_ORDER, player->id == 0? P0_CAT_SPR : P1_CAT_SPR);
 		scaffold_node_add_child(cat, sprite);
 	} else {
-		scaffold_node* sprite = mason_sprite_create(drawer, player->id == 0? P0_KITTEN_SPR : P1_KITTEN_SPR);
+		scaffold_node* sprite = mason_texture_create(drawer, CAT_DRAW_ORDER, player->id == 0? P0_KITTEN_SPR : P1_KITTEN_SPR);
 		scaffold_node_add_child(cat, sprite);
 	}
 

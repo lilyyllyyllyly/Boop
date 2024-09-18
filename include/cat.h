@@ -6,6 +6,8 @@
 #define P0_CAT_SPR "assets/orange-cat.png"
 #define P1_CAT_SPR "assets/black-cat.png"
 
+#define CAT_DRAW_ORDER 1
+
 #include "scaffold.h"
 
 #include "player.h"
