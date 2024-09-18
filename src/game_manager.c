@@ -102,8 +102,8 @@ static void process(scaffold_node* game_manager, double delta) {
 
 	// get mouse position
 	scaffold_vector2 mouse_pos = mason_drawer_screen_to_game_pos(data->drawer, (scaffold_vector2){GetMouseX(), GetMouseY()});
-	int xid = mouse_pos.x / CELL_W;
-	int yid = mouse_pos.y / CELL_H;
+	int xid = (mouse_pos.x - game_manager->local_pos.x) / CELL_W;
+	int yid = (mouse_pos.y - game_manager->local_pos.y) / CELL_H;
 
 	if (data->choosing_turn) { // there are 2 or more available promotion lines, player must choose one
 		printf("CHOOSING TURN - selection number %d\n", data->curr_choose_id);

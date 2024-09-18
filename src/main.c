@@ -25,7 +25,7 @@ int main() {
 
 	scaffold_node* root = scaffold_initialize();
 
-	scaffold_node* drawer = mason_drawer_create(HCELLS * CELL_W, VCELLS * CELL_H, TITLE, FPS);
+	scaffold_node* drawer = mason_drawer_create(HCELLS * CELL_W + 2*BOARD_OFFSET_X, VCELLS * CELL_H + 2*BOARD_OFFSET_Y, TITLE, FPS);
 	scaffold_node_add_child(root, drawer);
 
 	mason_drawer_set_window_size(WIN_W, WIN_H);
@@ -36,11 +36,13 @@ int main() {
 	scaffold_node_add_child(root, player1);
 
 	scaffold_node* game_manager = game_manager_create(drawer, player0->data, player1->data);
+	game_manager->local_pos = (scaffold_vector2){BOARD_OFFSET_X, BOARD_OFFSET_Y};
 	scaffold_node_add_child(root, game_manager);
 
 	game_manager_data* gm_data = (game_manager_data*)(game_manager->data);
 
 	scaffold_node* bg = mason_texture_create(drawer, 0, BACKGROUND_SPRITE);
+	bg->local_pos = (scaffold_vector2){BOARD_OFFSET_X, BOARD_OFFSET_Y};
 	scaffold_node_add_child(root, bg);
 
 	while (!gm_data->ended && !interrupt) {

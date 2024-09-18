@@ -13,6 +13,9 @@
 
 #define PLINE_CAT_COUNT 3
 
+#define BOARD_OFFSET_X 24
+#define BOARD_OFFSET_Y 24
+
 extern int game_manager_type;
 
 typedef struct {
