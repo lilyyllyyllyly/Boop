@@ -165,11 +165,13 @@ static void process(scaffold_node* game_manager, double delta) {
 		}
 
 		// reset promotion_lines
-		for (scaffold_list* elem = data->promotion_lines; elem != NULL; elem = elem->next) {
+		for (scaffold_list* elem = data->promotion_lines; elem != NULL;) {
+			scaffold_list* next = elem->next;
 			free(elem->data);
+			free(elem);
+			elem = next;
 		}
 
-		scaffold_list_destroy(data->promotion_lines);
 		data->promotion_lines = NULL;
 
 		// reset cat promotion line counts
@@ -267,6 +269,7 @@ check_end:
 		}
 
 		free(line);
+		free(data->promotion_lines);
 		data->promotion_lines = NULL;
 
 		goto next_turn;
