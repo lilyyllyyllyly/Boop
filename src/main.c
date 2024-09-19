@@ -5,14 +5,8 @@
 #include "mason.h"
 
 #include "game_manager.h"
+#include "ui.h"
 #include "player.h"
-
-#define GAME_W 216
-#define GAME_H 216
-#define WIN_W 864
-#define WIN_H 864
-#define TITLE "boop :3"
-#define FPS 0 // unlimited
 
 #define BACKGROUND_SPRITE "assets/bg.png"
 
@@ -42,6 +36,9 @@ int main() {
 	scaffold_node_add_child(root, game_manager);
 
 	game_manager_data* gm_data = (game_manager_data*)(game_manager->data);
+
+	scaffold_node* ui = ui_create(drawer, gm_data);
+	scaffold_node_add_child(root, ui);
 
 	scaffold_node* bg = mason_texture_create(drawer, 0, BACKGROUND_SPRITE);
 	scaffold_node_add_child(root, bg);

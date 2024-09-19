@@ -5,6 +5,13 @@
 #include "player.h"
 #include "cat.h"
 
+#define GAME_W 216
+#define GAME_H 216
+#define WIN_W 864
+#define WIN_H 864
+#define TITLE "boop :3"
+#define FPS 0 // unlimited
+
 #define HCELLS 6
 #define VCELLS 6
 
