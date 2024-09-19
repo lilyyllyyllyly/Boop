@@ -7,8 +7,10 @@
 #include "game_manager.h"
 #include "player.h"
 
-#define WIN_W 800
-#define WIN_H 600
+#define GAME_W 216
+#define GAME_H 216
+#define WIN_W 864
+#define WIN_H 864
 #define TITLE "boop :3"
 #define FPS 0 // unlimited
 
@@ -25,7 +27,7 @@ int main() {
 
 	scaffold_node* root = scaffold_initialize();
 
-	scaffold_node* drawer = mason_drawer_create(HCELLS * CELL_W + 2*BOARD_OFFSET_X, VCELLS * CELL_H + 2*BOARD_OFFSET_Y, TITLE, FPS);
+	scaffold_node* drawer = mason_drawer_create(GAME_W, GAME_H, TITLE, FPS);
 	scaffold_node_add_child(root, drawer);
 
 	mason_drawer_set_window_size(WIN_W, WIN_H);
@@ -42,7 +44,6 @@ int main() {
 	game_manager_data* gm_data = (game_manager_data*)(game_manager->data);
 
 	scaffold_node* bg = mason_texture_create(drawer, 0, BACKGROUND_SPRITE);
-	bg->local_pos = (scaffold_vector2){BOARD_OFFSET_X, BOARD_OFFSET_Y};
 	scaffold_node_add_child(root, bg);
 
 	while (!gm_data->ended && !interrupt) {
