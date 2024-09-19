@@ -12,7 +12,7 @@ int cat_type = NODE_TYPE_UNASSIGNED;
 static void destroy(scaffold_node* cat) {
 	cat_data* data = (cat_data*)(cat->data);
 
-	if (data->promote) {
+	if (data->level) {
 		player_add_cat(data->player); // add promoted cat to player's hand
 	} else {
 		player_add_kitten(data->player); // add kitten back to player's hand
@@ -55,7 +55,6 @@ scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, pl
 
 	data->player = player;
 	
-	data->promote = 0;
 	data->level = level;
 
 	data->promotion_lines = 0;

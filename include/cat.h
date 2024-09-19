@@ -20,7 +20,6 @@ typedef struct {
 
 	player_data* player;
 
-	int promote;
 	int level;
 
 	int promotion_lines;

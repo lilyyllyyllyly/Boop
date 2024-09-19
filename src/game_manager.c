@@ -160,7 +160,7 @@ static void process(scaffold_node* game_manager, double delta) {
 
 		// delete line
 		for (int i = 0; i < PLINE_CAT_COUNT; ++i) {
-			data->chosen_line.datas[i]->promote = 1;
+			data->chosen_line.datas[i]->level = 1;
 			scaffold_queue_destroy(data->chosen_line.cats[i]);
 		}
 
@@ -194,7 +194,7 @@ static void process(scaffold_node* game_manager, double delta) {
 		if (cat_data_->player != data->curr_player) return; // abort if the player chose the opponent's cat
 
 		// add a cat to the player's hand and remove piece from the board
-		cat_data_->promote = 1;
+		cat_data_->level = 1;
 		scaffold_queue_destroy(cat);
 
 		goto next_turn;
@@ -259,7 +259,7 @@ check_end:
 		promotion_line* line = (promotion_line*)(data->promotion_lines->data);
 
 		for (int i = 0; i < PLINE_CAT_COUNT; ++i) {
-			line->datas[i]->promote = 1;
+			line->datas[i]->level = 1;
 			scaffold_queue_destroy(line->cats[i]);
 		}
 
