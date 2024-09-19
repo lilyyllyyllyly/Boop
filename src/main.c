@@ -32,9 +32,9 @@ int main() {
 
 	mason_drawer_set_window_size(WIN_W, WIN_H);
 
-	scaffold_node* player0 = player_create(0);
+	scaffold_node* player0 = player_create(drawer, 0);
 	scaffold_node_add_child(root, player0);
-	scaffold_node* player1 = player_create(1);
+	scaffold_node* player1 = player_create(drawer, 1);
 	scaffold_node_add_child(root, player1);
 
 	scaffold_node* game_manager = game_manager_create(drawer, player0->data, player1->data);

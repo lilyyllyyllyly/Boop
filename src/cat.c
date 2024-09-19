@@ -13,9 +13,9 @@ static void destroy(scaffold_node* cat) {
 	cat_data* data = (cat_data*)(cat->data);
 
 	if (data->promote) {
-		++data->player->cat_count; // add promoted cat to player's hand
+		player_add_cat(data->player); // add promoted cat to player's hand
 	} else {
-		++data->player->kitten_count; // add kitten back to player's hand
+		player_add_kitten(data->player); // add kitten back to player's hand
 	}
 
 	game_manager_set_cell(data->game_manager, data->x, data->y, NULL);
@@ -61,9 +61,9 @@ scaffold_node* cat_create(scaffold_node* drawer, scaffold_node* game_manager, pl
 	data->promotion_lines = 0;
 
 	if (level) {
-		--player->cat_count; // remove cat from player's hand
+		player_del_cat(player); // remove cat from player's hand
 	} else {
-		--player->kitten_count; // remove kitten from player's hand
+		player_del_kitten(player); // remove kitten from player's hand
 	}
 
 	scaffold_node* cat = scaffold_node_create(
