@@ -193,12 +193,7 @@ static void process(scaffold_node* game_manager, double delta) {
 
 		if (cat_data_->player != data->curr_player) return; // abort if the player chose the opponent's cat
 
-		if (cat_data_->level > 0) { // if the player clicked a cat, simply remove it from the board
-			scaffold_queue_destroy(cat);
-			goto next_turn;
-		}
-
-		// if the player clicked a kitten, promote it
+		// add a cat to the player's hand and remove piece from the board
 		cat_data_->promote = 1;
 		scaffold_queue_destroy(cat);
 
