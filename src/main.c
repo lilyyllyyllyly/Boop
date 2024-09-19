@@ -53,9 +53,9 @@ int main() {
 	}
 
 	if (gm_data->curr_player == gm_data->player0) {
-		puts("Player 1 Wins!\n");
+		puts("Orange Wins!\n");
 	} else {
-		puts("Player 2 Wins!\n");
+		puts("Black Wins!\n");
 	}
 
 end:
