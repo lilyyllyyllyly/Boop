@@ -282,9 +282,6 @@ check_end:
 next_turn:
 	// other player's turn
 	data->curr_player = data->curr_player == data->player0? data->player1 : data->player0;
-
-	printf("player 0: %d kittens, %d cats\n", data->player0->kitten_count, data->player0->cat_count);
-	printf("player 1: %d kittens, %d cats\n", data->player1->kitten_count, data->player1->cat_count);
 }
 
 static void destroy(scaffold_node* game_manager) {
