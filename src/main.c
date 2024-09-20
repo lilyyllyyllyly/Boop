@@ -43,7 +43,7 @@ int main() {
 	scaffold_node* bg = mason_texture_create(drawer, 0, BACKGROUND_SPRITE);
 	scaffold_node_add_child(root, bg);
 
-	while (!gm_data->ended && !interrupt) {
+	while (!gm_data->winner && !interrupt) {
 		scaffold_process_cleanup(root, mason_drawer_get_frame_time());
 	}
 
@@ -52,7 +52,7 @@ int main() {
 		goto end;
 	}
 
-	if (gm_data->curr_player == gm_data->player0) {
+	if (gm_data->winner == gm_data->player0) {
 		puts("Orange Wins!\n");
 	} else {
 		puts("Black Wins!\n");

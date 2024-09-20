@@ -36,10 +36,10 @@ typedef struct {
 	player_data* curr_player;
 	player_data* player0;
 	player_data* player1;
+	player_data* winner;
 
 	scaffold_node* cells[VCELLS][HCELLS];
 
-	int ended;
 	int choosing_turn;
 
 	scaffold_list* promotion_lines;
