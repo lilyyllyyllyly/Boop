@@ -221,6 +221,9 @@ static void process(scaffold_node* game_manager, double delta) {
 	// check for promotion
 	for (scaffold_node* cat = game_manager->first_child; cat != NULL; cat = cat->next_sibling) {
 		cat_data* cat_data_ = (cat_data*)(cat->data);
+
+		if (cat_data_->player != data->curr_player) continue; // only check the current player's cats
+
 		int cat_x = cat_data_->x;
 		int cat_y = cat_data_->y;
 
