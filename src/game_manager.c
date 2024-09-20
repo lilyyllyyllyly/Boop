@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 
 #include "scaffold.h"
@@ -106,8 +105,6 @@ static void process(scaffold_node* game_manager, double delta) {
 	int yid = (mouse_pos.y - game_manager->local_pos.y) / CELL_H;
 
 	if (data->choosing_turn) { // there are 2 or more available promotion lines, player must choose one
-		printf("CHOOSING TURN - selection number %d\n", data->curr_choose_id);
-
 		if (!is_cell_valid(xid, yid) || !data->cells[yid][xid]) return; // abort if the cell is invalid or there isnt a cat there
 
 		scaffold_node* cat = data->cells[yid][xid];
@@ -146,7 +143,6 @@ static void process(scaffold_node* game_manager, double delta) {
 		}
 
 		if (elem == NULL) { // no valid line containing all the chosen cats, restart selection
-			printf("INVALID CHOICE\n");
 			data->curr_choose_id = 0;
 			return;
 		}
