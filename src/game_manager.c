@@ -94,12 +94,15 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 static void process(scaffold_node* game_manager, double delta) {
 	game_manager_data* data = (game_manager_data*)(game_manager->data);
 
-	if (data->winner) return;
-
 	int promote = 0;
 	if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !(promote = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && data->curr_player->cat_count)) return;
 
 	// on click
+
+	if (data->winner) {
+		data->reset = 1;
+		return;
+	}
 
 	// get mouse position
 	scaffold_vector2 mouse_pos = mason_drawer_screen_to_game_pos(data->drawer, (scaffold_vector2){GetMouseX(), GetMouseY()});

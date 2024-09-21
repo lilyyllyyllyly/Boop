@@ -20,6 +20,21 @@ static void process(scaffold_node* ui, double delta) {
 	int new_player    = data->game_manager->curr_player->id;
 	int new_choose_id = data->game_manager->curr_choose_id;
 
+	if (!data->old_won && data->game_manager->winner) {
+		// someone just won, create win label and update turn label
+		scaffold_node* restart_label = mason_label_create(data->drawer, TEXT_DRAW_ORDER, RESTART_TEXT, RESTART_FONT_SIZE, 0);
+		restart_label->local_pos = (scaffold_vector2){
+			.x = (GAME_W - data->restart_width)/2.f,
+			.y = GAME_H - RESTART_FONT_SIZE,
+		};
+		scaffold_node_add_child(ui, restart_label);
+
+		data->turn_label_data->shape.text = data->game_manager->winner->id == 0? WON_P0_TEXT : WON_P1_TEXT;
+		data->turn_label->local_pos.x = (GAME_W - (new_player == 0? data->won_p0_width : data->won_p1_width))/2.f;
+
+		data->old_won = 1;
+	}
+
 	if (data->game_manager->choosing_turn && !data->choosing_label) {
 		// choosing turn started, create hint label
 		scaffold_node* choosing_label = mason_label_create(data->drawer, TEXT_DRAW_ORDER, CHOOSING_TEXT_DEFAULT, CHOOSING_FONT_SIZE, 1);
@@ -44,7 +59,7 @@ static void process(scaffold_node* ui, double delta) {
 	if (new_player == data->old_player) goto end;
 
 	// turn changed, update turn text
-	data->turn_label_data->shape.text = new_player == 0? "Orange's Turn" : "Black's Turn";
+	data->turn_label_data->shape.text = new_player == 0? TURN_P0_TEXT : TURN_P1_TEXT;
 	data->turn_label->local_pos.x = (GAME_W - (new_player == 0? data->turn_p0_width : data->turn_p1_width))/2.f;
 
 end:
@@ -60,6 +75,7 @@ scaffold_node* ui_create(scaffold_node* drawer, game_manager_data* game_manager)
 
 	data->old_player = 0;
 	data->old_choose_id = 0;
+	data->old_won = 0;
 
 	scaffold_node* ui = scaffold_node_create(
 		&ui_type,
@@ -72,6 +88,8 @@ scaffold_node* ui_create(scaffold_node* drawer, game_manager_data* game_manager)
 
 	data->turn_p0_width = mason_drawer_get_text_width(TURN_P0_TEXT, TURN_FONT_SIZE);
 	data->turn_p1_width = mason_drawer_get_text_width(TURN_P1_TEXT, TURN_FONT_SIZE);
+	data->won_p0_width = mason_drawer_get_text_width(WON_P0_TEXT, TURN_FONT_SIZE);
+	data->won_p1_width = mason_drawer_get_text_width(WON_P1_TEXT, TURN_FONT_SIZE);
 	turn_label->local_pos.x = (GAME_W - data->turn_p0_width)/2.f;
 
 	scaffold_node_add_child(ui, turn_label);
@@ -82,6 +100,8 @@ scaffold_node* ui_create(scaffold_node* drawer, game_manager_data* game_manager)
 	data->choosing_label_data = NULL;
 	data->choosing_width = mason_drawer_get_text_width(CHOOSING_TEXT_DEFAULT, CHOOSING_FONT_SIZE);
 	data->choosing_strlen = strlen(CHOOSING_TEXT_DEFAULT);
+
+	data->restart_width = mason_drawer_get_text_width(RESTART_TEXT, RESTART_FONT_SIZE);
 
 	return ui;
 }

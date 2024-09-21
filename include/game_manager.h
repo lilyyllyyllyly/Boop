@@ -45,6 +45,8 @@ typedef struct {
 	scaffold_list* promotion_lines;
 	promotion_line chosen_line;
 	int curr_choose_id;
+
+	int reset;
 } game_manager_data;
 
 void game_manager_set_cell(scaffold_node* game_manager, int x, int y, scaffold_node* value);

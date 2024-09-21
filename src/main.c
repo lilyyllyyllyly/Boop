@@ -58,7 +58,7 @@ int main() {
 	while (!interrupt) {
 		scaffold_process_cleanup(root, mason_drawer_get_frame_time());
 
-		if (gm_data->winner) {
+		if (gm_data->reset) {
 			// restart
 			game_root->destroy(game_root);
 			game_root = start_game(root, drawer, &gm_data);
