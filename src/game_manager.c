@@ -281,11 +281,22 @@ next_turn:
 static void destroy(scaffold_node* game_manager) {
 	game_manager_data* data = (game_manager_data*)(game_manager->data);
 
-	for (scaffold_list* elem = data->promotion_lines; elem != NULL; elem = elem->next) {
+	// free promotion lines
+	for (scaffold_list* elem = data->promotion_lines; elem != NULL;) {
+		scaffold_list* next = elem->next;
 		free(elem->data);
+		free(elem);
+		elem = next;
 	}
 
-	scaffold_list_destroy(data->promotion_lines);
+	// destroy cats (must do this before freeing data because their destroy functions access data)
+	scaffold_node* child = game_manager->first_child;
+	while (child != NULL) {
+		scaffold_node* next = child->next_sibling;
+		child->destroy(child);
+		child = next;
+	}
+	game_manager->first_child = NULL;
 
 	free(data);
 

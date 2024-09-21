@@ -59,6 +59,6 @@ int main() {
 	}
 
 end:
-	scaffold_queue_destroy(root);
+	root->destroy(root);
 }
 
