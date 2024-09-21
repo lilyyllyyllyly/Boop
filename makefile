@@ -8,10 +8,17 @@ LIBS=-LMason/lib/ -LMason/Scaffold/lib/ -lmason -lscaffold -lraylib
 SRC_DIR=src
 SOURCES=$(wildcard ${SRC_DIR}/*.c)
 
+LIB_SUBDIRS=Mason/Scaffold Mason/
+
 OUTPUT=boop
 
-final:
+.PHONY: final debug enable-debug ${LIB_SUBDIRS}
+
+final: ${LIB_SUBDIRS}
 	${CC} ${CFLAGS} ${SOURCES} ${INCLUDE} ${LIBS} -o ${OUTPUT}
+
+${LIB_SUBDIRS}:
+	$(MAKE) -C $@
 
 debug: enable-debug final
 
