@@ -1,6 +1,8 @@
 CC=clang
-CFLAGS=-Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-but-set-variable -O2
+CFLAGS ?= -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-but-set-variable -O2
 DEBUG=-fsanitize=address,undefined -g3
+
+export CFLAGS
 
 INCLUDE=-IMason/include/ -IMason/Scaffold/include/ -Iinclude
 LIBS=-LMason/lib/ -LMason/Scaffold/lib/ -lmason -lscaffold -lraylib
