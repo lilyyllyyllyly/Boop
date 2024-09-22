@@ -94,6 +94,11 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 static void process(scaffold_node* game_manager, double delta) {
 	game_manager_data* data = (game_manager_data*)(game_manager->data);
 
+	if (mason_drawer_window_should_close()) {
+		data->quit = 1;
+		return;
+	}
+
 	int rmb = 0;
 	if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !(rmb = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))) return;
 
