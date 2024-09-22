@@ -59,7 +59,12 @@ void player_del_cat(player_data* player) {
 }
 
 static void destroy(scaffold_node* player) {
-	free(player->data);
+	player_data* data = player->data;
+
+	scaffold_list_destroy(data->kittens);
+	scaffold_list_destroy(data->cats);
+
+	free(data);
 	scaffold_node_destroy(player);
 }
 
