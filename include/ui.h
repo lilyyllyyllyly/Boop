@@ -18,7 +18,7 @@
 #define CHOOSING_TEXT_FORMAT  "Choose a line of 3 kittens... (%d/%d)"
 
 #define RESTART_FONT_SIZE 10
-#define RESTART_TEXT "Click to play again!"
+#define RESTART_TEXT "Click to play again! Right click to quit!"
 
 extern int ui_type;
 

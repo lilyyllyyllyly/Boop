@@ -62,10 +62,13 @@ int main() {
 			// restart
 			game_root->destroy(game_root);
 			game_root = start_game(root, drawer, &gm_data);
+		} else if (gm_data->quit) {
+			goto end;
 		}
 	}
 
 	puts("Interrupted by SIGINT.\n");
+end:
 	root->destroy(root);
 }
 

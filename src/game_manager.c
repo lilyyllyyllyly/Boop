@@ -94,13 +94,21 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 static void process(scaffold_node* game_manager, double delta) {
 	game_manager_data* data = (game_manager_data*)(game_manager->data);
 
-	int promote = 0;
-	if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !(promote = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && data->curr_player->cat_count)) return;
+	int rmb = 0;
+	if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !(rmb = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))) return;
+
+	int promote = rmb && data->curr_player->cat_count;
 
 	// on click
 
 	if (data->winner) {
-		data->reset = 1;
+		if (rmb) {
+			// quit on right click
+			data->quit = 1;
+		} else {
+			// reset on left click
+			data->reset = 1;
+		}
 		return;
 	}
 

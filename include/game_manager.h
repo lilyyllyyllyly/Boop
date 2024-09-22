@@ -47,6 +47,7 @@ typedef struct {
 	int curr_choose_id;
 
 	int reset;
+	int quit;
 } game_manager_data;
 
 void game_manager_set_cell(scaffold_node* game_manager, int x, int y, scaffold_node* value);
