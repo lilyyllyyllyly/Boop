@@ -118,6 +118,11 @@ static void process(scaffold_node* game_manager, double delta) {
 	int yid = (mouse_pos.y - game_manager->local_pos.y) / CELL_H;
 
 	if (data->choosing_turn) { // there are 2 or more available promotion lines, player must choose one
+		if (rmb) { // reset selection on right click
+			data->curr_choose_id = 0;
+			return;
+		}
+
 		if (!is_cell_valid(xid, yid) || !data->cells[yid][xid]) return; // abort if the cell is invalid or there isnt a cat there
 
 		scaffold_node* cat = data->cells[yid][xid];
