@@ -4,8 +4,10 @@ DEBUG=-fsanitize=address,undefined -g3
 
 export CFLAGS
 
-INCLUDE=-IMason/include/ -IMason/Scaffold/include/ -Iinclude
-LIBS=-LMason/lib/ -LMason/Scaffold/lib/ -lmason -lscaffold -lraylib
+RAYLIB_INCLUDE_DIR ?= Mason/raylib/src/
+
+INCLUDE=-IMason/include/ -IMason/Scaffold/include/ -I${RAYLIB_INCLUDE_DIR} -Iinclude/
+LIBS += -LMason/lib/ -LMason/Scaffold/lib/ -lmason -lscaffold -lm
 
 SRC_DIR=src
 SOURCES=$(wildcard ${SRC_DIR}/*.c)
