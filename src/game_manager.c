@@ -235,6 +235,19 @@ static void process(scaffold_node* game_manager, double delta) {
 		}
 	}
 
+	// check if player has 8 cats on the board (alternate win condition)
+	if (data->curr_player->kitten_count <= 0 && data->curr_player->cat_count <= 0) {
+		int placed_cats = 0;
+		for (scaffold_node* cat = game_manager->first_child; cat != NULL; cat = cat->next_sibling) {
+			cat_data* cat_data_ = (cat_data*)(cat->data);
+			if (cat_data_->player == data->curr_player && cat_data_->level == 1) ++placed_cats;
+		}
+		if (placed_cats == MAX_PIECE_COUNT) {
+    			data->winner = data->curr_player;
+			return;
+		}
+	}
+
 	// check for promotion
 	for (scaffold_node* cat = game_manager->first_child; cat != NULL; cat = cat->next_sibling) {
 		cat_data* cat_data_ = (cat_data*)(cat->data);

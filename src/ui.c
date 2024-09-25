@@ -33,6 +33,9 @@ static void process(scaffold_node* ui, double delta) {
 		data->turn_label->local_pos.x = (GAME_W - (new_player == 0? data->won_p0_width : data->won_p1_width))/2.f;
 
 		data->old_won = 1;
+		return;
+	} else if (data->old_won && data->game_manager->winner) {
+		return; // make sure text wont be updated if the game is over
 	}
 
 	if (data->game_manager->choosing_turn && !data->choosing_label) {
