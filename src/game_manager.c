@@ -68,8 +68,6 @@ int check_promotion(game_manager_data* data, scaffold_node* cat, scaffold_vector
 	if (other1_data->level > 0 && other2_data->level > 0 && cat1_data->level > 0) {
 		data->winner = cat1_data->player; // if all are cats, game ended
 		return 1; // count as promotion to not check other possibilities
-	} else if (other1_data->level > 0 || other2_data->level > 0 || cat1_data->level > 0) {
-		return 0; // otherwise, if any of them is a cat not a kitten, promotion wont happen
 	}
 
 	if (cat1_data->promotion_lines && other1_data->promotion_lines && other2_data->promotion_lines) {
