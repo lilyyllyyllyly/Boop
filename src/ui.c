@@ -48,12 +48,26 @@ static void process(scaffold_node* ui, double delta) {
 		data->choosing_label = choosing_label;
 		data->choosing_label_data = (mason_sprite_data*)(choosing_label->data);
 	} else if (!data->game_manager->choosing_turn && data->choosing_label) {
-		// choosing turn started, delete the label
+		// choosing turn ended, delete the label
 		scaffold_queue_destroy(data->choosing_label);
 		data->choosing_label = NULL;
 	} else if (new_choose_id != data->old_choose_id) {
 		// player selected a new cat (or selection reset), update label text
 		snprintf(data->choosing_label_data->shape.text, data->choosing_strlen+1, CHOOSING_TEXT_FORMAT, data->game_manager->curr_choose_id, PLINE_CAT_COUNT);
+	}
+
+	if (!data->no_pieces_label && data->game_manager->curr_player->kitten_count <= 0 && data->game_manager->curr_player->cat_count <= 0) {
+		// player out of pieces on hand, display hint label
+		data->no_pieces_label = mason_label_create(data->drawer, TEXT_DRAW_ORDER, NO_PIECES_TEXT, NO_PIECES_FONT_SIZE, 0);
+		data->no_pieces_label->local_pos = (scaffold_vector2){
+			.x = (GAME_W - data->no_pieces_width)/2.f,
+			.y = GAME_H - NO_PIECES_FONT_SIZE,
+		};
+		scaffold_node_add_child(ui, data->no_pieces_label);
+	} else if (data->no_pieces_label) {
+		// player has pieces and hint still being shown, delete it
+		scaffold_queue_destroy(data->no_pieces_label);
+		data->no_pieces_label = NULL;
 	}
 
 	if (new_player == data->old_player) goto end;
@@ -102,6 +116,9 @@ scaffold_node* ui_create(scaffold_node* drawer, game_manager_data* game_manager)
 	data->choosing_strlen = strlen(CHOOSING_TEXT_DEFAULT);
 
 	data->restart_width = mason_drawer_get_text_width(RESTART_TEXT, RESTART_FONT_SIZE);
+
+	data->no_pieces_label = NULL;
+	data->no_pieces_width = mason_drawer_get_text_width(NO_PIECES_TEXT, NO_PIECES_FONT_SIZE);
 
 	return ui;
 }

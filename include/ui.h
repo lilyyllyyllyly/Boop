@@ -17,6 +17,9 @@
 #define CHOOSING_TEXT_DEFAULT "Choose a line of 3 kittens... (0/3)"
 #define CHOOSING_TEXT_FORMAT  "Choose a line of 3 kittens... (%d/%d)"
 
+#define NO_PIECES_FONT_SIZE 10
+#define NO_PIECES_TEXT "Hand empty, graduate or remove a piece"
+
 #define RESTART_FONT_SIZE 10
 #define RESTART_TEXT "Click to play again! Right click to quit!"
 
@@ -42,6 +45,9 @@ typedef struct {
 
 	int restart_width;
 	int old_won;
+
+	scaffold_node* no_pieces_label;
+	int no_pieces_width;
 } ui_data;
 
 scaffold_node* ui_create(scaffold_node* drawer, game_manager_data* game_manager);
